@@ -1,6 +1,7 @@
 package com.emanueltobias.etfood.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,18 +34,19 @@ public class CozinhaController {
 	private CadastroCozinhaService cadastroCozinhaService;
 	
 	@GetMapping
-	public List<Cozinha> listar() {
-		return cozinhaRepository.listar();
+	public List<Cozinha> listar() {	
+		return cozinhaRepository.findAll();	
 	}
 	 
 	@GetMapping("/{cozinhaId}") 
-	public ResponseEntity<Cozinha> buscar(@PathVariable("cozinhaId") Long id) {
-		Cozinha cozinha = cozinhaRepository.buscar(id);
+	public ResponseEntity<Cozinha> buscar(@PathVariable Long cozinhaId) {
+		Optional<Cozinha> cozinha = cozinhaRepository.findById(cozinhaId);
 		
-		if (cozinha == null) {
-			return ResponseEntity.notFound().build();
+		if (cozinha.isPresent()) {
+			return ResponseEntity.ok(cozinha.get());
 		}
-		return ResponseEntity.ok(cozinha);
+		
+		return ResponseEntity.notFound().build();
 	}
 	
 	@PostMapping
@@ -54,29 +56,32 @@ public class CozinhaController {
 	}
 	
 	@PutMapping("/{cozinhaId}")
-	public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
-		Cozinha cozinhaAtual = cozinhaRepository.buscar(cozinhaId);
+	public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId,
+			@RequestBody Cozinha cozinha) {
+		Optional <Cozinha> cozinhaAtual = cozinhaRepository.findById(cozinhaId);
 
-		if (cozinhaAtual != null) {
-			BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-			cozinhaAtual = cadastroCozinhaService.salvar(cozinhaAtual);
-
-			return ResponseEntity.ok(cozinhaAtual);
+		if (cozinhaAtual.isPresent()) {
+			BeanUtils.copyProperties(cozinha, cozinhaAtual.get(), "id");
+			
+			Cozinha cozinhaSalva = cadastroCozinhaService.salvar(cozinhaAtual.get());
+			return ResponseEntity.ok(cozinhaSalva);
 		}
+		
 		return ResponseEntity.notFound().build();
 	}
 
 	@DeleteMapping("/{cozinhaId}")
-	public ResponseEntity<Cozinha> remover(@PathVariable Long cozinhaId) {
+	public ResponseEntity<?> remover(@PathVariable Long cozinhaId) {
 		try {
 			cadastroCozinhaService.excluir(cozinhaId);
 			return ResponseEntity.noContent().build();
-			
+
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
-			
+
 		} catch (EntidadeEmUsoException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			return ResponseEntity.status(HttpStatus.CONFLICT)
+					.body(e.getMessage());
 		}
 	}
 	
