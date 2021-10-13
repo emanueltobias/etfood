@@ -3,6 +3,8 @@ insert into cozinha (id, nome) values (2, 'Brasileira');
 
 insert into restaurante (nome, taxa_frete, cozinha_id) values ('Amaretto', 10, 2);
 insert into restaurante (nome, taxa_frete, cozinha_id) values ('Bobs', 5, 1);
+insert into restaurante (nome, taxa_frete, cozinha_id) values ('Fogo Vivo', 0, 2);
+
 
 insert into estado (id, nome) values (1, 'Minas Gerais');
 insert into estado (id, nome) values (2, 'São Paulo');

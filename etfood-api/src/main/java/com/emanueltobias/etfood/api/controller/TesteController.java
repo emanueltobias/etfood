@@ -13,6 +13,8 @@ import com.emanueltobias.etfood.domain.model.Cozinha;
 import com.emanueltobias.etfood.domain.model.Restaurante;
 import com.emanueltobias.etfood.domain.repository.CozinhaRepository;
 import com.emanueltobias.etfood.domain.repository.RestauranteRepository;
+import com.emanueltobias.etfood.infrastructure.repository.spec.RestauranteComFreteGratisSpec;
+import com.emanueltobias.etfood.infrastructure.repository.spec.RestauranteComNomeSemelhanteSpec;
 
 @RestController
 @RequestMapping("/teste")
@@ -69,6 +71,14 @@ public class TesteController {
 	@GetMapping("/restaurantes/count-por-cozinha")
 	public int restaurantesCountPorCozinha(Long cozinhaId) {
 		return restauranteRepository.countByCozinhaId(cozinhaId);
+	}
+	
+	@GetMapping("/restaurantes/com-frete-gratis")
+	public List<Restaurante> restaurantesComFreteGratis(String nome) {
+		var comfreteGratis = new RestauranteComFreteGratisSpec();
+		var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec(nome);
+		
+		return restauranteRepository.findAll(comfreteGratis.and(comNomeSemelhante));
 	}
 	
 }
