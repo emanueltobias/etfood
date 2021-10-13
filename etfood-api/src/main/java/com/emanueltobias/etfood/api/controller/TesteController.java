@@ -1,5 +1,8 @@
 package com.emanueltobias.etfood.api.controller;
 
+import static com.emanueltobias.etfood.infrastructure.repository.spec.RestauranteSpecs.comFreteGratis;
+import static com.emanueltobias.etfood.infrastructure.repository.spec.RestauranteSpecs.comNomeSemelhante;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -13,8 +16,6 @@ import com.emanueltobias.etfood.domain.model.Cozinha;
 import com.emanueltobias.etfood.domain.model.Restaurante;
 import com.emanueltobias.etfood.domain.repository.CozinhaRepository;
 import com.emanueltobias.etfood.domain.repository.RestauranteRepository;
-import com.emanueltobias.etfood.infrastructure.repository.spec.RestauranteComFreteGratisSpec;
-import com.emanueltobias.etfood.infrastructure.repository.spec.RestauranteComNomeSemelhanteSpec;
 
 @RestController
 @RequestMapping("/teste")
@@ -75,10 +76,9 @@ public class TesteController {
 	
 	@GetMapping("/restaurantes/com-frete-gratis")
 	public List<Restaurante> restaurantesComFreteGratis(String nome) {
-		var comfreteGratis = new RestauranteComFreteGratisSpec();
-		var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec(nome);
 		
-		return restauranteRepository.findAll(comfreteGratis.and(comNomeSemelhante));
+		return restauranteRepository.findAll(comFreteGratis()
+				.and(comNomeSemelhante(nome)));
 	}
 	
 }
