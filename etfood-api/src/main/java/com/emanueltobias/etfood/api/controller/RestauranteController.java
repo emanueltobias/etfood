@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.emanueltobias.etfood.domain.exception.CozinhaNaoEncontradaException;
 import com.emanueltobias.etfood.domain.exception.EntidadeNaoEncontradaException;
 import com.emanueltobias.etfood.domain.exception.NegocioException;
 import com.emanueltobias.etfood.domain.model.Restaurante;
@@ -42,9 +43,9 @@ public class RestauranteController {
 		return restauranteRepository.findAll();
 	}
 	
-	@GetMapping("/{restauranteId}")
-	public Restaurante buscar(@PathVariable Long restauranteId) {
-	    return cadastroRestauranteService.buscarOuFalhar(restauranteId);
+	@GetMapping("/{idRestaurante}")
+	public Restaurante buscar(@PathVariable Long idRestaurante) {
+	    return cadastroRestauranteService.buscarOuFalhar(idRestaurante);
 	}
 	
 	@PostMapping
@@ -52,30 +53,30 @@ public class RestauranteController {
 	public Restaurante adicionar(@RequestBody Restaurante restaurante) {
 	    try {
 	        return cadastroRestauranteService.salvar(restaurante);
-	    } catch (EntidadeNaoEncontradaException e) {
-	        throw new NegocioException(e.getMessage());
+	    } catch (CozinhaNaoEncontradaException e) {
+	        throw new NegocioException(e.getMessage(), e);
 	    }
 	}
 
-	@PutMapping("/{restauranteId}")
-	public Restaurante atualizar(@PathVariable Long restauranteId,
+	@PutMapping("/{idRestaurante}")
+	public Restaurante atualizar(@PathVariable Long idRestaurante,
 	        @RequestBody Restaurante restaurante) {
-	    Restaurante restauranteAtual = cadastroRestauranteService.buscarOuFalhar(restauranteId);
-	    
-	    BeanUtils.copyProperties(restaurante, restauranteAtual, 
-	            "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
-	    
 	    try {
+	    	Restaurante restauranteAtual = cadastroRestauranteService.buscarOuFalhar(idRestaurante);
+	    	
+	    	BeanUtils.copyProperties(restaurante, restauranteAtual, 
+	    			"id", "formasPagamento", "endereco", "dataCadastro", "produtos");
+	    	
 	        return cadastroRestauranteService.salvar(restauranteAtual);
-	    } catch (EntidadeNaoEncontradaException e) {
-	        throw new NegocioException(e.getMessage());
+	    } catch (CozinhaNaoEncontradaException e) {
+	        throw new NegocioException(e.getMessage(), e);
 	    }
 	}
 	
-	@DeleteMapping("/{restauranteId}")
-	public ResponseEntity<Restaurante> remover(@PathVariable Long restauranteId) {
+	@DeleteMapping("/{idRestaurante}")
+	public ResponseEntity<Restaurante> remover(@PathVariable Long idRestaurante) {
 		try {
-			cadastroRestauranteService.excluir(restauranteId);
+			cadastroRestauranteService.excluir(idRestaurante);
 			return ResponseEntity.noContent().build();
 
 		} catch (EntidadeNaoEncontradaException e) {
@@ -84,13 +85,13 @@ public class RestauranteController {
 	}
 	
 	@PatchMapping("/{restauranteId}")
-	public Restaurante atualizarParcial(@PathVariable Long restauranteId,
+	public Restaurante atualizarParcial(@PathVariable Long idRestaurante,
 	        @RequestBody Map<String, Object> campos) {
-	    Restaurante restauranteAtual = cadastroRestauranteService.buscarOuFalhar(restauranteId);
+	    Restaurante restauranteAtual = cadastroRestauranteService.buscarOuFalhar(idRestaurante);
 	    
 	    merge(campos, restauranteAtual);
 	    
-	    return atualizar(restauranteId, restauranteAtual);
+	    return atualizar(idRestaurante, restauranteAtual);
 	}
 
 	private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {

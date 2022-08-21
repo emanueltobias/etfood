@@ -4,16 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.emanueltobias.etfood.domain.exception.EntidadeNaoEncontradaException;
+import com.emanueltobias.etfood.domain.exception.RestauranteNaoEncontradoException;
 import com.emanueltobias.etfood.domain.model.Cozinha;
 import com.emanueltobias.etfood.domain.model.Restaurante;
 import com.emanueltobias.etfood.domain.repository.RestauranteRepository;
 
 @Service
 public class CadastroRestauranteService {
-	
-	private static final String MSG_RESTAURANTE_NAO_ENCONTRADO = "Não existe um cadastro de restaurante com código %d";
-	
+		
 	@Autowired
 	RestauranteRepository restauranteRepository;
 	
@@ -30,20 +28,18 @@ public class CadastroRestauranteService {
 		    return restauranteRepository.save(restaurante);
 	}
 	
-	public void excluir(Long restauranteId) {
+	public void excluir(Long idRestaurante) {
 		try {
-			restauranteRepository.deleteById(restauranteId);
+			restauranteRepository.deleteById(idRestaurante);
 
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(
-					 String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, restauranteId));
+			throw new RestauranteNaoEncontradoException(idRestaurante);
 		}
 	}
 	
-	public Restaurante buscarOuFalhar(Long restauranteId) {
-	    return restauranteRepository.findById(restauranteId)
-	        .orElseThrow(() -> new EntidadeNaoEncontradaException(
-	                String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, restauranteId)));
+	public Restaurante buscarOuFalhar(Long idRestaurante) {
+	    return restauranteRepository.findById(idRestaurante)
+	        .orElseThrow(() -> new RestauranteNaoEncontradoException(idRestaurante));
 	}
 
 }

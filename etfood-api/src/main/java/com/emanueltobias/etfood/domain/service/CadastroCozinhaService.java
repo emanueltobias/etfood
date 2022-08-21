@@ -5,8 +5,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.emanueltobias.etfood.domain.exception.CozinhaNaoEncontradaException;
 import com.emanueltobias.etfood.domain.exception.EntidadeEmUsoException;
-import com.emanueltobias.etfood.domain.exception.EntidadeNaoEncontradaException;
 import com.emanueltobias.etfood.domain.model.Cozinha;
 import com.emanueltobias.etfood.domain.repository.CozinhaRepository;
 
@@ -14,7 +14,6 @@ import com.emanueltobias.etfood.domain.repository.CozinhaRepository;
 public class CadastroCozinhaService {
 	
 	private static final String MSG_COZINHA_EM_USO = "Cozinha de código %d não pode ser removida, pois está em uso";
-	private static final String MSG_COZINHA_NAO_ENCONTRADA = "Não existe um cadastro de cozinha com o código %d";
 	
 	@Autowired
 	CozinhaRepository cozinhaRepository;
@@ -23,24 +22,22 @@ public class CadastroCozinhaService {
 		return cozinhaRepository.save(cozinha);
 	}
 
-	public void excluir(Long cozinhaId) {
+	public void excluir(Long idCozinha) {
 		try {
-			cozinhaRepository.deleteById(cozinhaId);
+			cozinhaRepository.deleteById(idCozinha);
 
 		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(
-					String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId));
+			throw new CozinhaNaoEncontradaException(idCozinha);
 
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
-					String.format(MSG_COZINHA_EM_USO, cozinhaId));
+					String.format(MSG_COZINHA_EM_USO, idCozinha));
 		}
 	}
 	
-	public Cozinha buscarOuFalhar(Long cozinhaId) {
-		return cozinhaRepository.findById(cozinhaId)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(
-						String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId)));
+	public Cozinha buscarOuFalhar(Long idCozinha) {
+		return cozinhaRepository.findById(idCozinha)
+				.orElseThrow(() -> new CozinhaNaoEncontradaException(idCozinha));
 	}
 
 }

@@ -36,9 +36,9 @@ public class CidadeController {
 		return cidadeRepository.findAll();
 	}
 
-	@GetMapping("/{cidadeId}")
-	public Cidade buscar(@PathVariable Long cidadeId) {
-	    return cadastroCidadeService.buscarOuFalhar(cidadeId);
+	@GetMapping("/{idCidade}")
+	public Cidade buscar(@PathVariable Long idCidade) {
+	    return cadastroCidadeService.buscarOuFalhar(idCidade);
 	}
 	
 	@PostMapping
@@ -51,11 +51,11 @@ public class CidadeController {
 		    }
 	}
 
-	@PutMapping("/{cidadeId}")
-	public Cidade atualizar(@PathVariable Long cidadeId,
+	@PutMapping("/{idCidade}")
+	public Cidade atualizar(@PathVariable Long idCidade,
 	        @RequestBody Cidade cidade) {	    
 	    try {
-	    	Cidade cidadeAtual = cadastroCidadeService.buscarOuFalhar(cidadeId);
+	    	Cidade cidadeAtual = cadastroCidadeService.buscarOuFalhar(idCidade);
 	    	
 	    	BeanUtils.copyProperties(cidade, cidadeAtual, "id");
 	    	
