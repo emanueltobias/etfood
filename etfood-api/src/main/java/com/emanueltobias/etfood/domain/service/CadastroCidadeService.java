@@ -24,9 +24,9 @@ public class CadastroCidadeService {
 	CadastroEstadoService cadastroEstadoService;
 	
 	public Cidade salvar(Cidade cidade) {
-	    Long estadoId = cidade.getEstado().getId();
+	    Long idEstado = cidade.getEstado().getId();
 
-	    Estado estado = cadastroEstadoService.buscarOuFalhar(estadoId);
+	    Estado estado = cadastroEstadoService.buscarOuFalhar(idEstado);
 
 	    cidade.setEstado(estado);
 	    
