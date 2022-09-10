@@ -10,7 +10,8 @@ public enum ProblemType {
 	MENSAGEM_INCOMPREENSIVEL("Mensagem incompreensível", "/mensagem-incompreensivel"),
 	ERRO_NEGOCIO("Violação de regra de negócio", "/erro-negocio"),
 	RECURSO_NAO_ENCONTRADO("Recurso não encontrado", "/recurso-nao-encontrado"),
-	ENTIDADE_EM_USO("Entidade em uso", "/entidade-em-uso");
+	ENTIDADE_EM_USO("Entidade em uso", "/entidade-em-uso"),
+	DADOS_INVALIDOS("Dados inválidos", "/dados-invalidos");
 	
 	private String title;
 	private String uri;
