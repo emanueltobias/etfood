@@ -1,4 +1,4 @@
-package com.emanueltobias.etfood;
+package com.emanueltobias.etfood.core.validation;
 
 public interface Groups {
 	
