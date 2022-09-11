@@ -2,6 +2,8 @@ package com.emanueltobias.etfood.api.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,7 +45,7 @@ public class CidadeController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cidade adicionar(@RequestBody Cidade cidade) {
+	public Cidade adicionar(@RequestBody @Valid Cidade cidade) {
 		try {
 			return cadastroCidadeService.salvar(cidade);
 		 } catch (EstadoNaoEncontradoException e) {
@@ -53,7 +55,7 @@ public class CidadeController {
 
 	@PutMapping("/{idCidade}")
 	public Cidade atualizar(@PathVariable Long idCidade,
-	        @RequestBody Cidade cidade) {	    
+	        @RequestBody @Valid Cidade cidade) {	    
 	    try {
 	    	Cidade cidadeAtual = cadastroCidadeService.buscarOuFalhar(idCidade);
 	    	
