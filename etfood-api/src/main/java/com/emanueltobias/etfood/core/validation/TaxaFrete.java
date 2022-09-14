@@ -18,12 +18,11 @@ import javax.validation.constraints.PositiveOrZero;
 
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = { })
-@PositiveOrZero
+@Constraint(validatedBy = { TaxaFreteValidator.class })
 public @interface TaxaFrete {
 	
 	@OverridesAttribute(constraint = PositiveOrZero.class, name = "message")
-	String message() default "{TaxaFrete.invalida}";
+	String message() default "taxa frete inválida";
 
 	Class<?>[] groups() default { };
 
