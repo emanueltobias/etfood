@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -103,7 +104,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		Throwable rootCause = ExceptionUtils.getRootCause(ex);
 		
-		if(rootCause instanceof InvalidFormatException) {
+		if (rootCause instanceof InvalidFormatException) {
 			return handleInvalidFormat((InvalidFormatException) rootCause, headers, status, request);
 		} else if(rootCause instanceof PropertyBindingException) {
 	        return handlePropertyBinding((PropertyBindingException) rootCause, headers, status, request); 
@@ -203,12 +204,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	        
 	    BindingResult bindingResult = ex.getBindingResult();
 	    
-	    List<Problem.Field> problemFields = bindingResult.getFieldErrors().stream()
-	    		.map(fieldError -> {
-	    			String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+	    List<Problem.Object> problemFields = bindingResult.getAllErrors().stream()
+	    		.map(objectError -> {
+	    			String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
 	    			
-	    		return Problem.Field.builder() 
-	    				.name(fieldError.getField())
+	    		String name = objectError.getObjectName();
+	    		
+	    		if (objectError instanceof FieldError) {
+	    			name = ((FieldError) objectError).getField();
+	    		}
+	    			
+	    		return Problem.Object.builder() 
+	    				.name(name)
 	    				.userMessage(message)
 	    				.build();
 	    		})
@@ -216,7 +223,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	    
 	    Problem problem = createProblemBuilder(status, problemType, detail)
 	        .userMessage(detail)
-	        .fields(problemFields)
+	        .objects(problemFields)
 	        .build();
 	    
 	    return handleExceptionInternal(ex, problem, headers, status, request);
@@ -226,14 +233,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
 		
-		if(body == null) {
+		if (body == null) {
 			body = Problem.builder()
 					.title(status.getReasonPhrase())
 					.status(status.value())
 		    		.userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
 			        .timestamp(LocalDateTime.now())
 					.build();
-		} else if(body instanceof String) {
+		} else if (body instanceof String) {
 			body = Problem.builder()
 					.title((String) body)
 					.status(status.value())
