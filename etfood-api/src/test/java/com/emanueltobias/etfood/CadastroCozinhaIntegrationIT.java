@@ -15,7 +15,7 @@ import com.emanueltobias.etfood.domain.model.Cozinha;
 import com.emanueltobias.etfood.domain.service.CadastroCozinhaService;
 
 @SpringBootTest
-class CadastroCozinhaIntegrationTests {
+class CadastroCozinhaIntegrationIT {
 	
 	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
