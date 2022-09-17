@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.emanueltobias.etfood.domain.exception.CozinhaNaoEncontradaException;
+import com.emanueltobias.etfood.domain.exception.EntidadeEmUsoException;
 import com.emanueltobias.etfood.domain.model.Cozinha;
 import com.emanueltobias.etfood.domain.service.CadastroCozinhaService;
 
@@ -40,6 +42,28 @@ class CadastroCozinhaIntegrationTests {
 		ConstraintViolationException erroEsperado = 
 				Assertions.assertThrows(ConstraintViolationException.class, () -> {
 			cadastroCozinhaService.salvar(novaCozinha);
+		});
+
+		assertThat(erroEsperado).isNotNull();
+	}
+	
+	@Test()
+	public void testarExcluirCozinhaInexistente() {
+
+		CozinhaNaoEncontradaException erroEsperado = 
+				Assertions.assertThrows(CozinhaNaoEncontradaException.class, () -> {
+			cadastroCozinhaService.excluir(9999999L);
+		});
+
+		assertThat(erroEsperado).isNotNull();
+	}
+	
+	@Test()
+	public void testarExcluirCozinhaEmUso() {
+
+		EntidadeEmUsoException erroEsperado = 
+				Assertions.assertThrows(EntidadeEmUsoException.class, () -> {
+			cadastroCozinhaService.excluir(1L);
 		});
 
 		assertThat(erroEsperado).isNotNull();
