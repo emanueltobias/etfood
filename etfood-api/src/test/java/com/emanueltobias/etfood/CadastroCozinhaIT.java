@@ -12,10 +12,10 @@ import org.springframework.test.context.TestPropertySource;
 
 import com.emanueltobias.etfood.domain.model.Cozinha;
 import com.emanueltobias.etfood.domain.repository.CozinhaRepository;
+import com.emanueltobias.etfood.util.DatabaseCleaner;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import util.DatabaseCleaner;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -43,7 +43,6 @@ class CadastroCozinhaIT {
 
 	@Test
 	public void deveRetornarStatus200_QuandoConsultarCozinhas() {
-		
 		RestAssured.given()
 			.accept(ContentType.JSON)
 		.when()
@@ -54,7 +53,6 @@ class CadastroCozinhaIT {
 	
 	@Test
 	public void deveConter3Cozinhas_QuandoConsultarCozinhas() {
-		
 		RestAssured.given()
 			.accept(ContentType.JSON)
 		.when()
@@ -74,6 +72,29 @@ class CadastroCozinhaIT {
 			.post()
 		.then()
 			.statusCode(HttpStatus.CREATED.value());
+	}
+	
+	@Test
+	public void deveRetornarRespostaEStatusCorreto_QuandoConsultarCozinhaExistente() {
+		RestAssured.given()
+			.pathParam("idCozinha", 2)
+			.accept(ContentType.JSON)
+		.when()
+			.get("/{idCozinha}")
+		.then()
+			.statusCode(HttpStatus.OK.value())
+			.body("nome", Matchers.equalTo("Americana"));
+	}
+	
+	@Test
+	public void deveRetornarStatus404_QuandoConsultarCozinhaExistente() {
+		RestAssured.given()
+			.pathParam("idCozinha", 100)
+			.accept(ContentType.JSON)
+		.when()
+			.get("/{idCozinha}")
+		.then()
+			.statusCode(HttpStatus.NOT_FOUND.value());
 	}
 	
 	private void prepararDados() {

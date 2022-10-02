@@ -1,4 +1,4 @@
-package util;
+package com.emanueltobias.etfood.util;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
