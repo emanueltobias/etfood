@@ -1,8 +1,10 @@
 package com.emanueltobias.etfood.domain.service;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.emanueltobias.etfood.domain.exception.RestauranteNaoEncontradoException;
 import com.emanueltobias.etfood.domain.model.Cozinha;
@@ -10,14 +12,15 @@ import com.emanueltobias.etfood.domain.model.Restaurante;
 import com.emanueltobias.etfood.domain.repository.RestauranteRepository;
 
 @Service
-public class CadastroRestauranteService {
+public class RestauranteService {
 		
 	@Autowired
 	RestauranteRepository restauranteRepository;
 	
 	@Autowired
-	CadastroCozinhaService cadastroCozinhaService;
+	CozinhaService cadastroCozinhaService;
 	
+	@Transactional
 	public Restaurante salvar(Restaurante restaurante) {
 		 Long cozinhaId = restaurante.getCozinha().getId();
 		    
@@ -28,6 +31,7 @@ public class CadastroRestauranteService {
 		    return restauranteRepository.save(restaurante);
 	}
 	
+	@Transactional
 	public void excluir(Long idRestaurante) {
 		try {
 			restauranteRepository.deleteById(idRestaurante);

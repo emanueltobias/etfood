@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.emanueltobias.etfood.domain.exception.CidadeNaoEncontradaException;
 import com.emanueltobias.etfood.domain.exception.EntidadeEmUsoException;
@@ -12,7 +13,7 @@ import com.emanueltobias.etfood.domain.model.Estado;
 import com.emanueltobias.etfood.domain.repository.CidadeRepository;
 
 @Service
-public class CadastroCidadeService {
+public class CidadeService {
 	
 	private static final String MSG_CIDADE_EM_USO = "Cidade de código %d não pode ser removida, pois está em uso";
 
@@ -20,8 +21,9 @@ public class CadastroCidadeService {
 	CidadeRepository cidadeRepository;
 	
 	@Autowired
-	CadastroEstadoService cadastroEstadoService;
+	EstadoService cadastroEstadoService;
 	
+	@Transactional
 	public Cidade salvar(Cidade cidade) {
 	    Long idEstado = cidade.getEstado().getId();
 
@@ -32,6 +34,7 @@ public class CadastroCidadeService {
 	    return cidadeRepository.save(cidade);
 	}
 	
+	@Transactional
 	public void excluir(Long idCidade) {
 		try {
 			cidadeRepository.deleteById(idCidade);

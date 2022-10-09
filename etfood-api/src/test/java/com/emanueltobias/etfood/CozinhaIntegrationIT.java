@@ -12,13 +12,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.emanueltobias.etfood.domain.exception.CozinhaNaoEncontradaException;
 import com.emanueltobias.etfood.domain.exception.EntidadeEmUsoException;
 import com.emanueltobias.etfood.domain.model.Cozinha;
-import com.emanueltobias.etfood.domain.service.CadastroCozinhaService;
+import com.emanueltobias.etfood.domain.service.CozinhaService;
 
 @SpringBootTest
-class CadastroCozinhaIntegrationIT {
+class CozinhaIntegrationIT {
 	
 	@Autowired
-	private CadastroCozinhaService cadastroCozinhaService;
+	private CozinhaService cadastroCozinhaService;
 
 	@Test
 	public void testarCadastroCozinhaComSucesso() {

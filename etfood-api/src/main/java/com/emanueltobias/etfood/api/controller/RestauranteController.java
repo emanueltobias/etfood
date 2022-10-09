@@ -34,7 +34,7 @@ import com.emanueltobias.etfood.domain.exception.EntidadeNaoEncontradaException;
 import com.emanueltobias.etfood.domain.exception.NegocioException;
 import com.emanueltobias.etfood.domain.model.Restaurante;
 import com.emanueltobias.etfood.domain.repository.RestauranteRepository;
-import com.emanueltobias.etfood.domain.service.CadastroRestauranteService;
+import com.emanueltobias.etfood.domain.service.RestauranteService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -46,7 +46,7 @@ public class RestauranteController {
 	RestauranteRepository restauranteRepository;
 	
 	@Autowired
-	CadastroRestauranteService cadastroRestauranteService;
+	RestauranteService cadastroRestauranteService;
 	
 	@Autowired
 	private SmartValidator smartValidator;

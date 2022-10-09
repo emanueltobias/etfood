@@ -21,7 +21,7 @@ import com.emanueltobias.etfood.domain.exception.EstadoNaoEncontradoException;
 import com.emanueltobias.etfood.domain.exception.NegocioException;
 import com.emanueltobias.etfood.domain.model.Cidade;
 import com.emanueltobias.etfood.domain.repository.CidadeRepository;
-import com.emanueltobias.etfood.domain.service.CadastroCidadeService;
+import com.emanueltobias.etfood.domain.service.CidadeService;
 
 @RestController
 @RequestMapping("/cidades")
@@ -31,7 +31,7 @@ public class CidadeController {
 	CidadeRepository cidadeRepository;
 
 	@Autowired
-	CadastroCidadeService cadastroCidadeService;
+	CidadeService cadastroCidadeService;
 
 	@GetMapping
 	public List<Cidade> listar() {

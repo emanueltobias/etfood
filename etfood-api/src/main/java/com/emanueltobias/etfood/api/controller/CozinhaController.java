@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.emanueltobias.etfood.domain.model.Cozinha;
 import com.emanueltobias.etfood.domain.repository.CozinhaRepository;
-import com.emanueltobias.etfood.domain.service.CadastroCozinhaService;
+import com.emanueltobias.etfood.domain.service.CozinhaService;
 
 @RestController
 @RequestMapping("/cozinhas")
@@ -29,7 +29,7 @@ public class CozinhaController {
 	private CozinhaRepository cozinhaRepository;
 	
 	@Autowired
-	private CadastroCozinhaService cadastroCozinhaService;
+	private CozinhaService cadastroCozinhaService;
 	
 	@GetMapping
 	public List<Cozinha> listar() {	
