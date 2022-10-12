@@ -4,9 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.emanueltobias.etfood.api.model.RestauranteModel;
 import com.emanueltobias.etfood.api.model.input.RestauranteInput;
-import com.emanueltobias.etfood.domain.model.Cozinha;
 import com.emanueltobias.etfood.domain.model.Restaurante;
 
 @Component

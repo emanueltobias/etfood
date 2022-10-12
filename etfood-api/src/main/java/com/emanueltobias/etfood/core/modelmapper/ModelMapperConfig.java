@@ -4,12 +4,20 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.emanueltobias.etfood.api.model.RestauranteModel;
+import com.emanueltobias.etfood.domain.model.Restaurante;
+
 @Configuration
 public class ModelMapperConfig {
 	
 	@Bean
 	public ModelMapper modelMapper() {
-		return new ModelMapper();
+		var modelMapper = new ModelMapper();
+		
+		modelMapper.createTypeMap(Restaurante.class, RestauranteModel.class)
+		.addMapping(Restaurante::getTaxaFrete, RestauranteModel::setPrecoFrete);
+		
+		return modelMapper;
 	}
 
 }
