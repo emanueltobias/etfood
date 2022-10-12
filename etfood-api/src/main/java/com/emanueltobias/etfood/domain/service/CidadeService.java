@@ -38,6 +38,7 @@ public class CidadeService {
 	public void excluir(Long idCidade) {
 		try {
 			cidadeRepository.deleteById(idCidade);
+			cidadeRepository.flush();
 			
 		} catch (EmptyResultDataAccessException e) {
 			throw new CidadeNaoEncontradaException(idCidade);

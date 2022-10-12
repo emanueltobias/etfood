@@ -18,7 +18,7 @@ import com.emanueltobias.etfood.domain.service.CozinhaService;
 class CozinhaIntegrationIT {
 	
 	@Autowired
-	private CozinhaService cadastroCozinhaService;
+	private CozinhaService cozinhaService;
 
 	@Test
 	public void testarCadastroCozinhaComSucesso() {
@@ -27,7 +27,7 @@ class CozinhaIntegrationIT {
 		novaCozinha.setNome("Chinesa");
 		
 		// ação
-		novaCozinha = cadastroCozinhaService.salvar(novaCozinha);
+		novaCozinha = cozinhaService.salvar(novaCozinha);
 		
 		// validação
 		assertThat(novaCozinha).isNotNull();
@@ -37,11 +37,11 @@ class CozinhaIntegrationIT {
 	@Test()
 	public void testarCadastroCozinhaSemNome() {
 		Cozinha novaCozinha = new Cozinha();
-		novaCozinha.setNome(null);
+		novaCozinha.setNome("");
 
 		ConstraintViolationException erroEsperado = 
 				Assertions.assertThrows(ConstraintViolationException.class, () -> {
-			cadastroCozinhaService.salvar(novaCozinha);
+			cozinhaService.salvar(novaCozinha);
 		});
 
 		assertThat(erroEsperado).isNotNull();
@@ -52,7 +52,7 @@ class CozinhaIntegrationIT {
 
 		CozinhaNaoEncontradaException erroEsperado = 
 				Assertions.assertThrows(CozinhaNaoEncontradaException.class, () -> {
-			cadastroCozinhaService.excluir(9999999L);
+			cozinhaService.excluir(9999999L);
 		});
 
 		assertThat(erroEsperado).isNotNull();
@@ -63,7 +63,7 @@ class CozinhaIntegrationIT {
 
 		EntidadeEmUsoException erroEsperado = 
 				Assertions.assertThrows(EntidadeEmUsoException.class, () -> {
-			cadastroCozinhaService.excluir(1L);
+			cozinhaService.excluir(1L);
 		});
 
 		assertThat(erroEsperado).isNotNull();

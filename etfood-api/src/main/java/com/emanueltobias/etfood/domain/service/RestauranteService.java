@@ -35,6 +35,7 @@ public class RestauranteService {
 	public void excluir(Long idRestaurante) {
 		try {
 			restauranteRepository.deleteById(idRestaurante);
+			restauranteRepository.flush();
 
 		} catch (EmptyResultDataAccessException e) {
 			throw new RestauranteNaoEncontradoException(idRestaurante);
