@@ -1,4 +1,4 @@
-package com.emanueltobias.etfood.api.model;
+package com.emanueltobias.etfood.api.model.mixin;
 
 import java.util.ArrayList;
 import java.util.List;

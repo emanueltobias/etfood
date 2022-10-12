@@ -1,4 +1,4 @@
-package com.emanueltobias.etfood.api.model;
+package com.emanueltobias.etfood.api.model.mixin;
 
 import com.emanueltobias.etfood.domain.model.Estado;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

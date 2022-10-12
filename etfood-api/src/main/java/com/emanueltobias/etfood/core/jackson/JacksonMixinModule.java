@@ -2,9 +2,9 @@ package com.emanueltobias.etfood.core.jackson;
 
 import org.springframework.stereotype.Component;
 
-import com.emanueltobias.etfood.api.model.CidadeMixin;
-import com.emanueltobias.etfood.api.model.CozinhaMixin;
-import com.emanueltobias.etfood.api.model.RestauranteMixin;
+import com.emanueltobias.etfood.api.model.mixin.CidadeMixin;
+import com.emanueltobias.etfood.api.model.mixin.CozinhaMixin;
+import com.emanueltobias.etfood.api.model.mixin.RestauranteMixin;
 import com.emanueltobias.etfood.domain.model.Cidade;
 import com.emanueltobias.etfood.domain.model.Cozinha;
 import com.emanueltobias.etfood.domain.model.Restaurante;

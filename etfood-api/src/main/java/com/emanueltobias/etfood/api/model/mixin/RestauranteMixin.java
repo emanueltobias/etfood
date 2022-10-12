@@ -1,4 +1,4 @@
-package com.emanueltobias.etfood.api.model;
+package com.emanueltobias.etfood.api.model.mixin;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
