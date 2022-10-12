@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.emanueltobias.etfood.api.model.CozinhaModel;
 import com.emanueltobias.etfood.api.model.RestauranteModel;
+import com.emanueltobias.etfood.api.model.input.RestauranteInput;
 import com.emanueltobias.etfood.domain.exception.CozinhaNaoEncontradaException;
 import com.emanueltobias.etfood.domain.exception.EntidadeNaoEncontradaException;
 import com.emanueltobias.etfood.domain.exception.NegocioException;
+import com.emanueltobias.etfood.domain.model.Cozinha;
 import com.emanueltobias.etfood.domain.model.Restaurante;
 import com.emanueltobias.etfood.domain.repository.RestauranteRepository;
 import com.emanueltobias.etfood.domain.service.RestauranteService;
@@ -52,8 +54,10 @@ public class RestauranteController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public RestauranteModel adicionar(@RequestBody @Valid Restaurante restaurante) {
+	public RestauranteModel adicionar(@RequestBody @Valid RestauranteInput restauranteInput) {
 	    try {
+			Restaurante restaurante = toDomainObject(restauranteInput);
+			
 			return toModel(restauranteService.salvar(restaurante));
 	    } catch (CozinhaNaoEncontradaException e) {
 	        throw new NegocioException(e.getMessage(), e);
@@ -62,8 +66,10 @@ public class RestauranteController {
 
 	@PutMapping("/{idRestaurante}")
 	public RestauranteModel atualizar(@PathVariable Long idRestaurante,
-	        @RequestBody @Valid Restaurante restaurante) {
+	        @RequestBody @Valid RestauranteInput restauranteInput) {
 	    try {
+	    	Restaurante restaurante = toDomainObject(restauranteInput);
+	    	
 	    	Restaurante restauranteAtual = restauranteService.buscarOuFalhar(idRestaurante);
 	    	
 	    	BeanUtils.copyProperties(restaurante, restauranteAtual, 
@@ -103,6 +109,19 @@ public class RestauranteController {
 		return restaurantes.stream()
 				.map(restaurante -> toModel(restaurante))
 				.collect(Collectors.toList());
+	}
+	
+	private Restaurante toDomainObject(RestauranteInput restauranteInput) {
+		Restaurante restaurante = new Restaurante();
+		restaurante.setNome(restauranteInput.getNome());
+		restaurante.setTaxaFrete(restauranteInput.getTaxaFrete());
+		
+		Cozinha cozinha = new Cozinha();
+		cozinha.setId(restauranteInput.getCozinha().getId());
+		
+		restaurante.setCozinha(cozinha);
+		
+		return restaurante;
 	}
 	
 }
