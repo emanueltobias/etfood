@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.emanueltobias.etfood.api.assembler.RestauranteInputDisassembler;
 import com.emanueltobias.etfood.api.assembler.RestauranteModelAssembler;
 import com.emanueltobias.etfood.api.model.RestauranteModel;
 import com.emanueltobias.etfood.api.model.input.RestauranteInput;
 import com.emanueltobias.etfood.domain.exception.CozinhaNaoEncontradaException;
 import com.emanueltobias.etfood.domain.exception.EntidadeNaoEncontradaException;
 import com.emanueltobias.etfood.domain.exception.NegocioException;
-import com.emanueltobias.etfood.domain.model.Cozinha;
 import com.emanueltobias.etfood.domain.model.Restaurante;
 import com.emanueltobias.etfood.domain.repository.RestauranteRepository;
 import com.emanueltobias.etfood.domain.service.RestauranteService;
@@ -42,6 +42,9 @@ public class RestauranteController {
 	@Autowired
 	RestauranteModelAssembler restauranteModelAssembler;
 	
+	@Autowired
+	private RestauranteInputDisassembler restauranteInputDisassembler;       
+	
 	@GetMapping
 	public List<RestauranteModel> listar() {
 		return restauranteModelAssembler.toCollectionModel(restauranteRepository.findAll());
@@ -58,7 +61,7 @@ public class RestauranteController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public RestauranteModel adicionar(@RequestBody @Valid RestauranteInput restauranteInput) {
 	    try {
-			Restaurante restaurante = toDomainObject(restauranteInput);
+			Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
 			
 			return restauranteModelAssembler.toModel(restauranteService.salvar(restaurante));
 	    } catch (CozinhaNaoEncontradaException e) {
@@ -70,7 +73,7 @@ public class RestauranteController {
 	public RestauranteModel atualizar(@PathVariable Long idRestaurante,
 	        @RequestBody @Valid RestauranteInput restauranteInput) {
 	    try {
-	    	Restaurante restaurante = toDomainObject(restauranteInput);
+	    	Restaurante restaurante = restauranteInputDisassembler.toDomainObject(restauranteInput);
 	    	
 	    	Restaurante restauranteAtual = restauranteService.buscarOuFalhar(idRestaurante);
 	    	
@@ -92,19 +95,6 @@ public class RestauranteController {
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
 		}
-	}
-	
-	private Restaurante toDomainObject(RestauranteInput restauranteInput) {
-		Restaurante restaurante = new Restaurante();
-		restaurante.setNome(restauranteInput.getNome());
-		restaurante.setTaxaFrete(restauranteInput.getTaxaFrete());
-		
-		Cozinha cozinha = new Cozinha();
-		cozinha.setId(restauranteInput.getCozinha().getId());
-		
-		restaurante.setCozinha(cozinha);
-		
-		return restaurante;
 	}
 	
 }
