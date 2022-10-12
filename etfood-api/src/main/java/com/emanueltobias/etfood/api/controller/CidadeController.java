@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.emanueltobias.etfood.api.assembler.CidadeInputDisassembler;
+import com.emanueltobias.etfood.api.assembler.CidadeModelAssembler;
+import com.emanueltobias.etfood.api.model.CidadeModel;
+import com.emanueltobias.etfood.api.model.input.CidadeInput;
 import com.emanueltobias.etfood.domain.exception.EstadoNaoEncontradoException;
 import com.emanueltobias.etfood.domain.exception.NegocioException;
 import com.emanueltobias.etfood.domain.model.Cidade;
@@ -31,48 +34,62 @@ public class CidadeController {
 	CidadeRepository cidadeRepository;
 
 	@Autowired
-	CidadeService cadastroCidadeService;
+	CidadeService cidadeService;
+	
+	@Autowired
+	private CidadeModelAssembler cidadeModelAssembler;
+
+	@Autowired
+	private CidadeInputDisassembler cidadeInputDisassembler; 
 
 	@GetMapping
-	public List<Cidade> listar() {
-		return cidadeRepository.findAll();
+	public List<CidadeModel> listar() {
+	    return cidadeModelAssembler.toCollectionModel(cidadeRepository.findAll());
 	}
 
 	@GetMapping("/{idCidade}")
-	public Cidade buscar(@PathVariable Long idCidade) {
-	    return cadastroCidadeService.buscarOuFalhar(idCidade);
+	public CidadeModel buscar(@PathVariable Long idCidade) {
+		Cidade cidade = cidadeService.buscarOuFalhar(idCidade);
+		
+	    return cidadeModelAssembler.toModel(cidade);
 	}
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cidade adicionar(@RequestBody @Valid Cidade cidade) {
-		try {
-			return cadastroCidadeService.salvar(cidade);
-		 } catch (EstadoNaoEncontradoException e) {
-		    	throw new NegocioException(e.getMessage(), e); 
+	public CidadeModel adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
+		 try {
+		        Cidade cidade = cidadeInputDisassembler.toDomainObject(cidadeInput);
+		        
+		        cidade = cidadeService.salvar(cidade);
+		        
+		        return cidadeModelAssembler.toModel(cidade);
+		    } catch (EstadoNaoEncontradoException e) {
+		        throw new NegocioException(e.getMessage(), e);
 		    }
-	}
+		}
+
 
 	@PutMapping("/{idCidade}")
-	public Cidade atualizar(@PathVariable Long idCidade,
-	        @RequestBody @Valid Cidade cidade) {	    
+	public CidadeModel atualizar(@PathVariable Long idCidade,
+	        @RequestBody @Valid CidadeInput cidadeInput) {	    
 	    try {
-	    	Cidade cidadeAtual = cadastroCidadeService.buscarOuFalhar(idCidade);
+	    	Cidade cidadeAtual = cidadeService.buscarOuFalhar(idCidade);
 	    	
-	    	BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-	    	
-	    	return cadastroCidadeService.salvar(cidadeAtual);
+	    	cidadeInputDisassembler.copyToDomainObject(cidadeInput, cidadeAtual);
+	        
+	        cidadeAtual = cidadeService.salvar(cidadeAtual);
+	        
+	        return cidadeModelAssembler.toModel(cidadeAtual);
 	    } catch (EstadoNaoEncontradoException e) {
 	    	throw new NegocioException(e.getMessage(), e); 
 	    }
-	    
 	}
 
 	
 	@DeleteMapping("/{cidadeId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long cidadeId) {
-		cadastroCidadeService.excluir(cidadeId);	
+		cidadeService.excluir(cidadeId);	
 	}
 
 }
