@@ -4,9 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.emanueltobias.etfood.api.model.EnderecoModel;
 import com.emanueltobias.etfood.api.model.RestauranteModel;
-import com.emanueltobias.etfood.domain.model.Endereco;
 import com.emanueltobias.etfood.domain.model.Restaurante;
 
 @Configuration
